@@ -16,8 +16,8 @@
 ;               |                                              _|              #
 ; **************************************************************************** #
 
-global	_ft_write
-extern	___error
+global	ft_write
+extern	__errno_location
 
 section	.text
 
@@ -28,16 +28,16 @@ section	.text
 ; fifth argument:	r8
 ; sixth argument:	r9
 
-_ft_write:
+ft_write:
 	push	rsp	
-	mov	rax, 0x2000004	; write
-	syscall				; the arguments are already set in place
-	jc	error_handling	; check if Carry Flag is on (error)
-	jmp return
+	mov		rax, 1			; write
+	syscall					; the arguments are already set in place
+	jc		error_handling	; check if Carry Flag is on (error)
+	jmp 	return
 
 error_handling:
 	mov		rdx, rax
-	call	___error
+	call	__errno_location
 	mov		qword[rax], rdx
 	mov		rax, -1
 	
