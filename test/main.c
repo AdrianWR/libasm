@@ -3,98 +3,95 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iwillens <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: aroque <aroque@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/04/07 19:32:21 by iwillens          #+#    #+#             */
-/*   Updated: 2020/11/02 19:17:50 by aroque           ###   ########.fr       */
+/*   Created: 2020/03/31 16:35:42 by aroque            #+#    #+#             */
+/*   Updated: 2020/11/03 23:23:57 by aroque           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <fcntl.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 #include "libasm.h"
+#include "minunit.h"
 
-static void		ft_putstr(char *s)
+MU_TEST(test_ft_strlen)
 {
-	int	i;
-
-	i = 0;
-	while (s && s[i])
-	{
-		ft_write(1, &s[i], 1);
-		i++;
-	}
+	mu_assert(ft_strlen("42saopaulo") == 10, "Error: ft_strlen base case");
+	mu_assert(ft_strlen("") == 0, "Error: ft_strlen empty string");
 }
 
-static void		ft_putnbr(int nb)
+MU_TEST(test_ft_strcpy)
 {
-	long int	n;
-	char		c;
+	const char src[] = "Let's disassembly ourselves!";
+	char *dest;
+	char *ret;
 
-	n = nb;
-	if (nb < 0)
-	{
-		ft_write(1, "-", 1);
-		n = (long int)nb * -1;
-	}
-	if (n >= 10)
-		ft_putnbr((int)(n / 10));
-	c = n % 10 + '0';
-	ft_write(1, &c, 1);
+	dest = malloc(strlen(src) * sizeof(*dest));
+	ret = ft_strcpy(dest, src);
+	mu_assert(strcmp(src, dest) == 0, "Error: ft_strcpy base case");
+	mu_assert(strcmp(ret, dest) == 0, "Error: ft_strcpy base case return");
+	mu_assert(strcmp(ret, src) == 0, "Error: ft_strcpy base case return");
+	free(dest);
 }
 
-static void		read_stdin(void)
+MU_TEST(test_ft_strcmp)
 {
-	int		ret;
-	char	buffer[48];
-
-	ret = 0;
-	while ((ret = ft_read(1, &buffer, 47)) > 0)
-	{
-		buffer[ret] = 0;
-		ft_putstr(buffer);
-	}
+	mu_assert_int_eq(strcmp("b", "a"), ft_strcmp("b", "a"));
+	mu_assert_int_eq(strcmp("a", "b"), ft_strcmp("a", "b"));
+	mu_assert_int_eq('b' - 'm', ft_strcmp("banana", "maca"));
+	mu_assert_int_eq('a' - 'o', ft_strcmp("banana", "banano"));
+	mu_assert_int_eq('a', ft_strcmp("a", ""));
+	mu_assert_int_eq(-'a', ft_strcmp("", "a"));
+	mu_assert_int_eq(0, ft_strcmp("", ""));
 }
 
-static void		exception_test(void)
+MU_TEST(test_ft_write)
 {
-	int		ret;
-	char	buffer[1];
+	int				devNull;
+	unsigned long	n;
+	const char		buf[] = "Test ft_write";
 
-	ft_putstr("\n***** Exceptions:");
-	ft_putstr("\nft_read (Invalid Descriptor): ret-> ");
-	ret = ft_read(5, &buffer, 1);
-	ft_putnbr(ret);
-	ft_putstr("; errno: ");
-	ft_putnbr(errno);
-	ft_putstr("\nft_write (Invalid Descriptor): ret-> ");
-	errno = 0;
-	ret = ft_write(555, "XXXXX", 5);
-	ft_putnbr(ret);
-	ft_putstr("; errno: ");
-	ft_putnbr(errno);
-	ft_putstr("\n");
+	devNull = open("/dev/null", O_WRONLY);
+	n = ft_write(devNull, buf, strlen(buf));
+	mu_assert(n == strlen(buf), "Error: ft_write base case");
+	close(devNull);
 }
 
-int				main(void)
-{
-	int		len;
-	char	*s;
-	int		ret;
+//MU_TEST(test_ft_read)
+//{
+//	char buf[100];
+//
+//	ft_read(STDIN_FILENO, buf, 100);
+//	ft_write(STDOUT_FILENO, buf, ft_strlen(buf));
+//}
 
-	ret = 0;
-	exception_test();
-	ret = ft_write(1, "\n***** Normal Test: ", 20);
-	ft_putstr("\nft_write: '42 Disassembly'");
-	s = ft_strdup("42 Disassembly");
-	ft_putstr("\nft_strdup: Duplicando '42 Disassembly': ");
-	ft_putstr(s);
-	len = ft_strlen(s);
-	ft_putstr("\nft_strlen: '14': ");
-	ft_putnbr(len);
-	ft_putstr("\nft_strcpy: Alterando para '42 Assembly': ");
-	ft_strcpy(&s[3], "Assembly");
-	ft_putstr(s);
-	ft_putstr("\nft_strcmp: Disassembly is greater than Assembly: '3': ");
-	ft_putnbr(ft_strcmp("Disassembly", "Assembly"));
-	ft_putstr("\nft_read: Reading from stdin: ");
-	read_stdin();
+MU_TEST(test_ft_strdup)
+{
+	char *test;
+	test = ft_strdup("Teste");
+	mu_assert(ft_strcmp("Teste", test) == 0, "Error: ft_strdup base case");
+	mu_assert(ft_strcmp("Teste", ft_strdup("Teste")) == 0, "Error: ft_strdup base case");
+	mu_assert(ft_strcmp("", ft_strdup("")) == 0, "Error: ft_strdup base case");
+	free(test);
+	//printf("Result -> %s\n", strdup(NULL));
+}
+
+MU_TEST_SUITE(mandatory)
+{
+	MU_RUN_TEST(test_ft_strlen);
+	MU_RUN_TEST(test_ft_strcpy);
+	MU_RUN_TEST(test_ft_strcmp);
+	MU_RUN_TEST(test_ft_write);
+	//MU_RUN_TEST(test_ft_read);
+	MU_RUN_TEST(test_ft_strdup);
+}
+
+int	main(void)
+{
+	MU_RUN_SUITE(mandatory);
+	MU_REPORT();
+	return (MU_EXIT_CODE);
 }
