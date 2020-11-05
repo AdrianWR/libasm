@@ -11,6 +11,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Install ASM dependencies
+        run: sudo apt-get install nasm
+
       - name: Builds static library libasm.a
-        run: make all
+        run: make
     
