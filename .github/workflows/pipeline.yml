@@ -1,0 +1,16 @@
+name: libasm
+
+on:
+  push:
+    branches: [ develop/libc ]
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Builds static library libasm.a
+        run: make all
+    
