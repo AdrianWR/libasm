@@ -6,7 +6,7 @@
 #    By: aroque   <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/31 22:38:06 by aroque            #+#    #+#              #
-#    Updated: 2020/11/03 21:25:52 by aroque           ###   ########.fr        #
+#    Updated: 2020/11/04 21:55:49 by aroque           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,8 +42,10 @@ CC_FLAGS	=	-Wall			\
  				-L.				\
  				-lasm
 
-TEST_DIR	=	./test
+TEST_DIR	=	./tests
 TEST		=	${TEST_DIR}/main.c
+BIN			=	${TEST_DIR}/main
+
 TEST_BONUS	=	${TEST_DIR}/main_bonus.c
 EXEC_BONUS	=	${TEST_DIR}/mainbonus
 
@@ -59,10 +61,9 @@ ${OBJ_DIR}/%.o: %.s
 	mkdir -p $(OBJ_DIR)
 	$(ASM) $(ASM_FLAGS)	$< -o $@
 
-test: $(TEST) $(NAME)
-	$(CC) $< $(CC_FLAGS)
-	./a.out
-	$(RM) a.out
+test: $(TEST)
+	$(CC) $< $(CC_FLAGS) -o $(BIN)
+	$(BIN)
 
 clean:
 	$(RM) $(OBJ) $(OBJ_BONUS)
