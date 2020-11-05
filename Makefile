@@ -6,7 +6,7 @@
 #    By: aroque   <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/31 22:38:06 by aroque            #+#    #+#              #
-#    Updated: 2020/11/04 21:55:49 by aroque           ###   ########.fr        #
+#    Updated: 2020/11/04 22:44:13 by aroque           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -61,7 +61,7 @@ ${OBJ_DIR}/%.o: %.s
 	mkdir -p $(OBJ_DIR)
 	$(ASM) $(ASM_FLAGS)	$< -o $@
 
-test: $(TEST)
+test: $(TEST) $(NAME)
 	$(CC) $< $(CC_FLAGS) -o $(BIN)
 	$(BIN)
 
