@@ -1,0 +1,5 @@
+.*.sw[op]
+
+libasm.a
+tests/main
+build/
