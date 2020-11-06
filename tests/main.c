@@ -51,13 +51,13 @@ MU_TEST(test_ft_strcmp)
 
 MU_TEST(test_ft_write)
 {
-	int		n;
+	ssize_t		n;
 	int		fd;
 	const char	buf[] = "Test ft_write";
 
 	fd = open("/dev/null", O_WRONLY);
-	n = ft_write(fd, buf, strlen(buf));
-	mu_assert(n == strlen(buf), "Error: ft_write base case");
+	n = ft_write(fd, buf, 13);
+	mu_assert(n == 13, "Error: ft_write base case");
 	close(fd);
 
 	ft_write(42, buf, strlen(buf));
