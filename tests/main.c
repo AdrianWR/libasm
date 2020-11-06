@@ -6,7 +6,7 @@
 /*   By: aroque <aroque@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/31 16:35:42 by aroque            #+#    #+#             */
-/*   Updated: 2020/11/04 22:45:05 by aroque           ###   ########.fr       */
+/*   Updated: 2020/11/06 00:45:45 by aroque           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <errno.h>
 #include "libasm.h"
 #include "minunit.h"
 
@@ -50,14 +51,19 @@ MU_TEST(test_ft_strcmp)
 
 MU_TEST(test_ft_write)
 {
-	int				devNull;
+	int				fd;
 	unsigned long	n;
 	const char		buf[] = "Test ft_write";
 
-	devNull = open("/dev/null", O_WRONLY);
-	n = ft_write(devNull, buf, strlen(buf));
+	fd = open("/dev/null", O_WRONLY);
+	//fd = 1;
+	n = ft_write(fd, buf, strlen(buf));
 	mu_assert(n == strlen(buf), "Error: ft_write base case");
-	close(devNull);
+	close(fd);
+
+	ft_write(42, buf, strlen(buf));
+	mu_assert_int_eq(EBADF, errno);
+
 }
 
 //MU_TEST(test_ft_read)
