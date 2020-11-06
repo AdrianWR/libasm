@@ -90,6 +90,12 @@ MU_TEST(test_ft_strdup)
 	free(test);
 }
 
+//MU_TEST(test_ft_list_push_front)
+//{
+//
+//
+//}
+
 MU_TEST_SUITE(mandatory)
 {
 	MU_RUN_TEST(test_ft_strlen);
@@ -98,6 +104,7 @@ MU_TEST_SUITE(mandatory)
 	MU_RUN_TEST(test_ft_write);
 	MU_RUN_TEST(test_ft_read);
 	MU_RUN_TEST(test_ft_strdup);
+	//MU_RUN_TEST(test_ft_list_push_front);
 }
 
 int	main(void)

@@ -28,6 +28,7 @@ OBJ		=	$(patsubst %.s, ${OBJ_DIR}/%.o, ${SRC})
 OBJ_BONUS	=	$(patsubst %.s, ${OBJ_DIR}/%.o, ${SRC_BONUS})
 
 INCLUDE	=	./include
+HEADER = 	${INCLUDE}/libasm.h
 
 ASM			=	nasm
 ASM_FLAGS	=	-felf64
