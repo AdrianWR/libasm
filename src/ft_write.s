@@ -36,6 +36,7 @@ ft_write:
 	jmp 	return
 
 error_handling:
+	neg		rax
 	mov		rdx, rax
 	call	__errno_location
 	mov		qword[rax], rdx

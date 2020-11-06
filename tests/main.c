@@ -51,12 +51,11 @@ MU_TEST(test_ft_strcmp)
 
 MU_TEST(test_ft_write)
 {
-	int				fd;
-	unsigned long	n;
-	const char		buf[] = "Test ft_write";
+	int		n;
+	int		fd;
+	const char	buf[] = "Test ft_write";
 
 	fd = open("/dev/null", O_WRONLY);
-	//fd = 1;
 	n = ft_write(fd, buf, strlen(buf));
 	mu_assert(n == strlen(buf), "Error: ft_write base case");
 	close(fd);
@@ -66,13 +65,20 @@ MU_TEST(test_ft_write)
 
 }
 
-//MU_TEST(test_ft_read)
-//{
-//	char buf[100];
-//
-//	ft_read(STDIN_FILENO, buf, 100);
-//	ft_write(STDOUT_FILENO, buf, ft_strlen(buf));
-//}
+MU_TEST(test_ft_read)
+{
+	int	n;
+	int	fd;
+	char	buf[8];
+
+	fd = open("/dev/urandom", O_RDONLY);
+	n = ft_read(fd, buf, 8);
+	mu_assert_int_eq(8, n);
+	close(fd);
+
+	ft_read(42, buf, 8);
+	mu_assert_int_eq(EBADF, errno);
+}
 
 MU_TEST(test_ft_strdup)
 {
@@ -82,7 +88,6 @@ MU_TEST(test_ft_strdup)
 	mu_assert(ft_strcmp("Teste", ft_strdup("Teste")) == 0, "Error: ft_strdup base case");
 	mu_assert(ft_strcmp("", ft_strdup("")) == 0, "Error: ft_strdup base case");
 	free(test);
-	//printf("Result -> %s\n", strdup(NULL));
 }
 
 MU_TEST_SUITE(mandatory)
@@ -91,7 +96,7 @@ MU_TEST_SUITE(mandatory)
 	MU_RUN_TEST(test_ft_strcpy);
 	MU_RUN_TEST(test_ft_strcmp);
 	MU_RUN_TEST(test_ft_write);
-	//MU_RUN_TEST(test_ft_read);
+	MU_RUN_TEST(test_ft_read);
 	MU_RUN_TEST(test_ft_strdup);
 }
 

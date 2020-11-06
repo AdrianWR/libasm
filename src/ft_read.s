@@ -6,38 +6,42 @@
 ;         | |/ /_  | (_| | \__ \ (_| \__ \__ \  __/ | | | | | |_) | | |_| |    #
 ;         |_|____|  \__,_|_|___/\__,_|___/___/\___|_| |_| |_|_.__/|_|\__, |    #
 ;                                                                     __/ |    #
-;       ft_read.s                                                    |___/     #
-;       By: rdjuric <rdjuric@student.42sp.org.br>                              #
-;       Created: 2020/04/02 15:17:43 by rdjuric                                #
-;       Updated: 2020/04/02 22:41:42 by aroque                                 #
+;       ft_read.s                                                   |___/     #
+;       By: iwillens <iwillens@student.42sp.org.br>                            #
+;       Created: 2020/04/02 14:55:05 by iwillens                               #
+;       Updated: 2020/04/02 22:37:16 by aroque                                 #
 ;                                                                              #
 ;    _. ._ _   _.      _      o      o | |  _  ._   _     ._ _| o     ._ o  _  #
 ;   (_| | (_) (_| |_| (/_     | \/\/ | | | (/_ | | _>     | (_| | |_| |  | (_  #
 ;               |                                              _|              #
 ; **************************************************************************** #
 
-; Para o syscall					Recebendo da chamada
-; rdi -> fd							rdi -> fd
-; rsi -> buff						rsi -> buff
-; rdx -> bytes						rdx -> bytes
-; rax -> opcode
+global	ft_read
+extern	__errno_location
 
-		global      _ft_read
-		extern		___error
-		section     .text
-_ft_read:
-		push		rsp
-		mov			rax, 0x2000003	; read opcode
-		syscall						; calls read, if error sets flags
-		jc err						; check for errors in flags, if found jump to err
-		jmp			return			; if no errors, rax has the return value of read syscall 
+section	.text
 
-err:
-		mov			rdx, rax
-		call		___error
-		mov			qword[rax], rdx	; if error is found, we set rax to -1
-		mov			rax, -1			; return  rax
+; first argument:	rdi
+; second argument:	rsi
+; third argument:	rdx
+; fourth argument:	rcx
+; fifth argument:	r8
+; sixth argument:	r9
+
+ft_read:
+	push	rsp	
+	mov	rax, 0			; read
+	syscall				; the arguments are already set in place
+	jc	error_handling		; check if Carry Flag is on (error)
+	jmp 	return
+
+error_handling:
+	neg	rax
+	mov	rdx, rax
+	call	__errno_location
+	mov	qword[rax], rdx
+	mov	rax, -1
 
 return:
-		pop			rsp
-		ret
+	pop	rsp
+	ret
