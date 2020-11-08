@@ -6,7 +6,7 @@
 /*   By: aroque <aroque@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/31 16:35:42 by aroque            #+#    #+#             */
-/*   Updated: 2020/11/04 22:45:05 by aroque           ###   ########.fr       */
+/*   Updated: 2020/11/06 00:45:45 by aroque           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <errno.h>
 #include "libasm.h"
 #include "minunit.h"
 
@@ -50,23 +51,34 @@ MU_TEST(test_ft_strcmp)
 
 MU_TEST(test_ft_write)
 {
-	int				devNull;
-	unsigned long	n;
-	const char		buf[] = "Test ft_write";
+	ssize_t		n;
+	int		fd;
+	const char	buf[] = "Test ft_write";
 
-	devNull = open("/dev/null", O_WRONLY);
-	n = ft_write(devNull, buf, strlen(buf));
-	mu_assert(n == strlen(buf), "Error: ft_write base case");
-	close(devNull);
+	fd = open("/dev/null", O_WRONLY);
+	n = ft_write(fd, buf, 13);
+	mu_assert(n == 13, "Error: ft_write base case");
+	close(fd);
+
+	ft_write(42, buf, strlen(buf));
+	mu_assert_int_eq(EBADF, errno);
+
 }
 
-//MU_TEST(test_ft_read)
-//{
-//	char buf[100];
-//
-//	ft_read(STDIN_FILENO, buf, 100);
-//	ft_write(STDOUT_FILENO, buf, ft_strlen(buf));
-//}
+MU_TEST(test_ft_read)
+{
+	int	n;
+	int	fd;
+	char	buf[8];
+
+	fd = open("/dev/urandom", O_RDONLY);
+	n = ft_read(fd, buf, 8);
+	mu_assert_int_eq(8, n);
+	close(fd);
+
+	ft_read(42, buf, 8);
+	mu_assert_int_eq(EBADF, errno);
+}
 
 MU_TEST(test_ft_strdup)
 {
@@ -76,8 +88,49 @@ MU_TEST(test_ft_strdup)
 	mu_assert(ft_strcmp("Teste", ft_strdup("Teste")) == 0, "Error: ft_strdup base case");
 	mu_assert(ft_strcmp("", ft_strdup("")) == 0, "Error: ft_strdup base case");
 	free(test);
-	//printf("Result -> %s\n", strdup(NULL));
 }
+
+#ifdef BONUS
+
+MU_TEST(test_ft_list_push_front)
+{
+	t_list	*list;
+	t_list	*first_list;
+	char	*content1 = "My first content";
+	char	*content2 = "My second content";
+
+	list = NULL;
+	mu_assert(list == NULL, "Error: Initialization error on t_list");
+	ft_list_push_front(&list, content1);
+	mu_assert(list != NULL, "Error: Push front error on t_list");
+	mu_assert(list->data != NULL, "Error: Push front error on t_list");
+	mu_assert(ft_strcmp(list->data, "My first content") == 0, "Error: Push front error on t_list");
+
+	first_list = list;
+	ft_list_push_front(&list, content2);
+	mu_assert(list != NULL, "Error: Push front error on t_list");
+	mu_assert(list->data != NULL, "Error: Push front error on t_list");
+	mu_assert(ft_strcmp(list->data, "My second content") == 0, "Error: Push front error on t_list");
+	mu_assert(ft_strcmp(first_list->data, "My first content") == 0, "Error: Push front error on t_list");
+	free(first_list);
+	free(list);
+}
+
+MU_TEST(test_ft_list_size)
+{
+	t_list	*list;
+
+	list = NULL;
+	mu_assert_int_eq(0, ft_list_size(list));
+	ft_list_push_front(&list, "First content");
+	mu_assert_int_eq(1, ft_list_size(list));
+	ft_list_push_front(&list, "Second content");
+	mu_assert_int_eq(2, ft_list_size(list));
+	free(list->next);
+	free(list);
+}
+
+#endif
 
 MU_TEST_SUITE(mandatory)
 {
@@ -85,8 +138,12 @@ MU_TEST_SUITE(mandatory)
 	MU_RUN_TEST(test_ft_strcpy);
 	MU_RUN_TEST(test_ft_strcmp);
 	MU_RUN_TEST(test_ft_write);
-	//MU_RUN_TEST(test_ft_read);
+	MU_RUN_TEST(test_ft_read);
 	MU_RUN_TEST(test_ft_strdup);
+	#ifdef BONUS
+	MU_RUN_TEST(test_ft_list_push_front);
+	MU_RUN_TEST(test_ft_list_size);
+	#endif
 }
 
 int	main(void)

@@ -4,12 +4,17 @@
 
 The purpose of `libasm` is to create a static library with classic libc functions, as `strlen` and `strcpy`. However, it stands out for being written exclusively in assembly code, more specifically the Intel x64 assembly code syntax. For instance, the static library `libasm` has the following available functions:
 
-- ft_strlen;
-- ft_strcpy;
-- ft_strcmp;
-- ft_write;
-- ft_read;
-- ft_strdup;
+* `ft_strlen`;
+* `ft_strcpy`;
+* `ft_strcmp`;
+* `ft_write`;
+* `ft_read`;
+* `ft_strdup`;
+
+As a bonus section of this project, the following functions were added, representing linked list data structure helping functions:
+
+* `ft_list_push_front`;
+* `ft_list_size`;
 
 The description of these functions may be found on your system under `man 3 <function>` (without *ft_*). As expected, the functions have to behave exactly like its C counterparts, including exceptions and errors.
 

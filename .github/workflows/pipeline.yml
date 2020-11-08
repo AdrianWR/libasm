@@ -1,19 +1,15 @@
 name: libasm
-
 on:
   push:
-    branches: [ develop/libc ]
-  
+    branches:
+      - main
+      - develop/libc
 jobs:
   build:
-    runs-on: ubuntu-latest
-
+    runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
-
       - name: Install ASM dependencies
         run: sudo apt-get install nasm
-
       - name: Builds static library libasm.a
         run: make
-    
