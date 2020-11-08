@@ -13,5 +13,3 @@ jobs:
         run: sudo apt-get install nasm
       - name: Builds static library libasm.a
         run: make
-      - name: Run test suite on static library functions
-        run: make test
