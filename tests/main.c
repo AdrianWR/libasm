@@ -90,11 +90,47 @@ MU_TEST(test_ft_strdup)
 	free(test);
 }
 
-//MU_TEST(test_ft_list_push_front)
-//{
-//
-//
-//}
+#ifdef BONUS
+
+MU_TEST(test_ft_list_push_front)
+{
+	t_list	*list;
+	t_list	*first_list;
+	char	*content1 = "My first content";
+	char	*content2 = "My second content";
+
+	list = NULL;
+	mu_assert(list == NULL, "Error: Initialization error on t_list");
+	ft_list_push_front(&list, content1);
+	mu_assert(list != NULL, "Error: Push front error on t_list");
+	mu_assert(list->data != NULL, "Error: Push front error on t_list");
+	mu_assert(ft_strcmp(list->data, "My first content") == 0, "Error: Push front error on t_list");
+
+	first_list = list;
+	ft_list_push_front(&list, content2);
+	mu_assert(list != NULL, "Error: Push front error on t_list");
+	mu_assert(list->data != NULL, "Error: Push front error on t_list");
+	mu_assert(ft_strcmp(list->data, "My second content") == 0, "Error: Push front error on t_list");
+	mu_assert(ft_strcmp(first_list->data, "My first content") == 0, "Error: Push front error on t_list");
+	free(first_list);
+	free(list);
+}
+
+MU_TEST(test_ft_list_size)
+{
+	t_list	*list;
+
+	list = NULL;
+	mu_assert_int_eq(0, ft_list_size(list));
+	ft_list_push_front(&list, "First content");
+	mu_assert_int_eq(1, ft_list_size(list));
+	ft_list_push_front(&list, "Second content");
+	mu_assert_int_eq(2, ft_list_size(list));
+	free(list->next);
+	free(list);
+}
+
+#endif
 
 MU_TEST_SUITE(mandatory)
 {
@@ -104,7 +140,10 @@ MU_TEST_SUITE(mandatory)
 	MU_RUN_TEST(test_ft_write);
 	MU_RUN_TEST(test_ft_read);
 	MU_RUN_TEST(test_ft_strdup);
-	//MU_RUN_TEST(test_ft_list_push_front);
+	#ifdef BONUS
+	MU_RUN_TEST(test_ft_list_push_front);
+	MU_RUN_TEST(test_ft_list_size);
+	#endif
 }
 
 int	main(void)
