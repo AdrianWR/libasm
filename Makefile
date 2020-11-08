@@ -73,6 +73,10 @@ test: $(TEST) $(NAME)
 	$(CC) $< $(CC_FLAGS) -o $(BIN)
 	$(BIN)
 
+test_bonus: $(TEST) $(NAME) bonus
+	$(CC) $< $(CC_FLAGS) -D BONUS=1 -o $(BIN)
+	$(BIN)
+
 clean:
 	$(RM) $(OBJ) $(OBJ_BONUS)
 
