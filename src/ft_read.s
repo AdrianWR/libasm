@@ -32,7 +32,8 @@ ft_read:
 	push	rsp	
 	mov	rax, 0			; read
 	syscall				; the arguments are already set in place
-	jc	error_handling		; check if Carry Flag is on (error)
+	cmp	rax, 0
+	jl	error_handling		; check if Carry Flag is on (error)
 	jmp 	return
 
 error_handling:

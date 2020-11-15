@@ -20,8 +20,7 @@ SRC		=	ft_strlen.s	\
 			ft_strdup.s
 
 SRC_BONUS =	ft_list_push_front_bonus.s	\
-			ft_list_size_bonus.s		\
-			ft_list_sort_bonus.s
+			ft_list_size_bonus.s
 
 OBJ_DIR	=	./build
 OBJ		=	$(patsubst %.s, ${OBJ_DIR}/%.o, ${SRC})
